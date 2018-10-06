@@ -12,7 +12,8 @@ cake.spd = 100
 -- Gravity
 cake.weight = 1000
 
-cake.state = "stand" -- stand or run
+cake.state = "stand"            -- stand or run
+cake.hasFallen = false          -- Used to help indicate whether Cake can jump
 
 -- Variables used to keep track of which way Cake is facing
 local mirror = 1                -- -1 for normal, 1 for mirrored
@@ -42,8 +43,9 @@ function cake:load()
 end
 
 function cake:keyPressed(key)
-    if key == "space" then
+    if key == "space" and self.yVel <= .01 then
         self.body:applyLinearImpulse(0, -500)
+        cake.hasFallen = false
     elseif key == "a" then
         self:rotate("left")
     elseif key == "d" then
@@ -81,15 +83,13 @@ function cake:update(dt)
         else
             currentRunFrame = 1
         end
-            activeRunFrame = runFrames[currentRunFrame]
-            elapsedTime = 0
-        end
+        activeRunFrame = runFrames[currentRunFrame]
+        elapsedTime = 0
     end
+end
 
 function cake:draw()
     -- Iterating through active run frames!!
-
-
 
     if (self.state == "stand") then
         love.graphics.draw(standSprite, self.x + spriteXTranslate, self.y - 8, 0, mirror, 1)

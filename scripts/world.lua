@@ -11,20 +11,27 @@ world.gravity = {
 function world:load()
     self.world = love.physics.newWorld(self.gravity.x, self.gravity.y)
 
-    world:newArenaStructure("floor", 0, 200, 500, 10)
-    world:newArenaStructure("leftWall", -200, 0, 10, 500)
-    world:newArenaStructure("rightWall", 200, 0, 10, 500)
-    world:newArenaStructure("ceiling", 0, -200, 500, 10)
+    world:newArenaStructure(0, 200, 500, 16)
+    world:newArenaStructure(-200, 0, 16, 500)
+    world:newArenaStructure(200, 0, 16, 500)
+    world:newArenaStructure(0, -200, 500, 16)
 
-    -- Loading background image: 
+    -- Loading images: 
     background = love.graphics.newImage("/assets/wallpaper.png")
+    blockSprite = love.graphics.newImage("/assets/iron_block.png")
 end
 
-function world:newArenaStructure(id, x, y, w, h)
-    self.arena[id] = {}
-    self.arena[id].body = love.physics.newBody(self.world, x, y)
-    self.arena[id].shape = love.physics.newRectangleShape(w, h)
-    self.arena[id].fixture = love.physics.newFixture(self.arena[id].body, self.arena[id].shape)
+-- To use this function, blocks' height and width should be divisible by 16!!
+function world:newArenaStructure(x, y, w, h)
+    local myStruct = {}
+    myStruct.body = love.physics.newBody(self.world, x, y)
+    myStruct.shape = love.physics.newRectangleShape(w, h)
+    myStruct.fixture = love.physics.newFixture(myStruct.body, myStruct.shape)
+    myStruct.y = y
+    myStruct.x = x
+    myStruct.width = w
+    myStruct.height = h
+    table.insert(self.arena, myStruct)
 end
 
 function world:update(dt)
@@ -39,10 +46,19 @@ function world:draw()
         end
     end
 
-    love.graphics.polygon("fill", self.arena.floor.body:getWorldPoints(self.arena.floor.shape:getPoints()))
-    love.graphics.polygon("fill", self.arena.leftWall.body:getWorldPoints(self.arena.leftWall.shape:getPoints()))
-    love.graphics.polygon("fill", self.arena.rightWall.body:getWorldPoints(self.arena.rightWall.shape:getPoints()))
-    love.graphics.polygon("fill", self.arena.ceiling.body:getWorldPoints(self.arena.ceiling.shape:getPoints()))
+    for i in ipairs(self.arena) do
+        love.graphics.polygon("fill", self.arena[i].body:getWorldPoints(self.arena[i].shape:getPoints()))
+        local xStart = self.arena[i].x - (self.arena[i].width / 2)
+        local yStart = self.arena[i].y - (self.arena[i].height / 2)
+        local widthRemaining = self.arena[i].width
+        local heightRemaining = self.arena[i].height
 
+        -- while a[i] do
+        --     print(a[i])
+        --     i = i + 1
+        -- end
+
+        love.graphics.draw(blockSprite, xStart, yStart, 0, 1, 1)
+    end
     
 end
