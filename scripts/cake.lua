@@ -62,7 +62,7 @@ end
 
 function cake:keyPressed(key)
     if key == "space" and self.yVel <= .01 then
-        self.body:applyLinearImpulse(0, -500)
+        self.body:applyLinearImpulse(0, -350)
         cake.hasFallen = false
     elseif key == "a" then
         self:rotate("left")
