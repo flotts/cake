@@ -11,7 +11,6 @@ world.gravity = {
 function world:load()
     self.world = love.physics.newWorld(self.gravity.x, self.gravity.y)
 
-    -- platform
     world:newArenaStructure("floor", 0, 200, 500, 10)
     world:newArenaStructure("leftWall", -200, 0, 10, 500)
     world:newArenaStructure("rightWall", 200, 0, 10, 500)
@@ -32,11 +31,7 @@ end
 function world:draw()
     love.graphics.setColor(1,1,1)
     love.graphics.polygon("fill", self.arena.floor.body:getWorldPoints(self.arena.floor.shape:getPoints()))
-    -- for _, body in pairs(self.arena) do
-    --     print(body)
-    --     for _, fixture in pairs(body:getFixtures()) do
-    --         local shape = fixture:getShape()
-    --         love.graphics.polygon("fill", body:getWorldPoints(shape:getPoints()))
-    --     end
-    -- end
+    love.graphics.polygon("fill", self.arena.leftWall.body:getWorldPoints(self.arena.leftWall.shape:getPoints()))
+    love.graphics.polygon("fill", self.arena.rightWall.body:getWorldPoints(self.arena.rightWall.shape:getPoints()))
+    love.graphics.polygon("fill", self.arena.ceiling.body:getWorldPoints(self.arena.ceiling.shape:getPoints()))
 end

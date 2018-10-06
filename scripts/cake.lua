@@ -1,7 +1,7 @@
 cake = {}
 
-cake.x = 400
-cake.y = 300
+cake.x = 0
+cake.y = 0
 cake.xVel = 0
 cake.yVel = 0
 
