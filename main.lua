@@ -1,13 +1,18 @@
-require "scripts/player"
+require "scripts/world"
+require "scripts/cake"
 
 function love.load()
-    player.load()
+    world:load()
+    cake:load()
 end
 
 function love.update(dt)
-    player.update(dt)
+    world:update(dt)
+    cake:update(dt)
 end
 
 function love.draw()
-    player.draw()
+    love.graphics.translate()
+    world:draw()
+    cake:draw()
 end
