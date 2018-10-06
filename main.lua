@@ -23,7 +23,7 @@ worldTranslation = {
 
 function love.draw()
     love.graphics.translate(worldTranslation.x, worldTranslation.y)
-    love.graphics.scale(2)
+    -- love.graphics.scale(2)
 
     love.graphics.translate(-cake.body:getX(), -cake.body:getY())
     love.graphics.rotate(cake.rot.rot)

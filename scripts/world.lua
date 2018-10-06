@@ -11,10 +11,10 @@ world.gravity = {
 function world:load()
     self.world = love.physics.newWorld(self.gravity.x, self.gravity.y)
 
-    world:newArenaStructure(0, 200, 500, 16)
-    world:newArenaStructure(-200, 0, 16, 500)
-    world:newArenaStructure(200, 0, 16, 500)
-    world:newArenaStructure(0, -200, 500, 16)
+    world:newArenaStructure(0, 15, 31, 1)
+    world:newArenaStructure(-15, 0, 1, 31)
+    world:newArenaStructure(15, 0, 1, 31)
+    world:newArenaStructure(0, -15, 31, 1)
 
     -- Loading images: 
     background = love.graphics.newImage("/assets/wallpaper.png")
@@ -23,6 +23,10 @@ end
 
 -- To use this function, blocks' height and width should be divisible by 16!!
 function world:newArenaStructure(x, y, w, h)
+    x = x * 16
+    y = y * 16
+    w = w * 16
+    h = h * 16
     local myStruct = {}
     myStruct.body = love.physics.newBody(self.world, x, y)
     myStruct.shape = love.physics.newRectangleShape(w, h)
@@ -46,17 +50,28 @@ function world:draw()
         end
     end
 
+    -- Tiling solid blocks: 
     for i in ipairs(self.arena) do
+        -- Adding white background, for debugging:
         love.graphics.polygon("fill", self.arena[i].body:getWorldPoints(self.arena[i].shape:getPoints()))
+        -- xStart calculates the top right corner of the box
         local xStart = self.arena[i].x - (self.arena[i].width / 2)
         local yStart = self.arena[i].y - (self.arena[i].height / 2)
+        -- These will be used to iterate through the width and height in increments of 16
         local widthRemaining = self.arena[i].width
         local heightRemaining = self.arena[i].height
 
-        -- while a[i] do
-        --     print(a[i])
-        --     i = i + 1
-        -- end
+        -- We'll subtract 16 from widthRemaining until it's 0
+        while widthRemaining > 0 do
+            local xVal = xStart + self.arena[i].width - widthRemaining
+
+            while heightRemaining > 0 do
+                local yVal = yStart + self.arena[i].height - heightRemaining
+                love.graphics.draw(blockSprite, xVal, yVal, 0, 1, 1)
+                heightRemaining = heightRemaining - 16
+            end
+            widthRemaining = widthRemaining - 16
+        end
 
         love.graphics.draw(blockSprite, xStart, yStart, 0, 1, 1)
     end
