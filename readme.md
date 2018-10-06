@@ -1,4 +1,4 @@
 # cake.lua
 
-Ty "Flotts" Poorman
-Ben "Shithead" Holland
+- Ty "Flotts" Poorman
+- Ben "Shithead" Holland
