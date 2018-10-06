@@ -12,7 +12,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.translate()
+--    love.graphics.translate()
     world:draw()
     cake:draw()
 end

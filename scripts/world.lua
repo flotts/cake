@@ -19,10 +19,10 @@ function world:load()
 end
 
 function world:newArenaStructure(id, x, y, w, h)
-    self.arena.id = {}
-    self.arena.id.body = love.physics.newBody(self.world, x, y)
-    self.arena.id.shape = love.physics.newRectangleShape(w, h)
-    self.arena.id.fixture = love.physics.newFixture(self.arena.id.body, self.arena.id.shape)
+    self.arena[id] = {}
+    self.arena[id].body = love.physics.newBody(self.world, x, y)
+    self.arena[id].shape = love.physics.newRectangleShape(w, h)
+    self.arena[id].fixture = love.physics.newFixture(self.arena[id].body, self.arena[id].shape)
 end
 
 function world:update(dt)
@@ -30,10 +30,13 @@ function world:update(dt)
 end
 
 function world:draw()
-    for _, body in pairs(self.world:getBodies()) do
-        for _, fixture in pairs(body:getFixtures()) do
-            local shape = fixture:getShape()
-            love.graphics.polygon("fill", body:getWorldPoints(shape:getPoints()))
-        end
-    end
+    love.graphics.setColor(1,1,1)
+    love.graphics.polygon("fill", self.arena.floor.body:getWorldPoints(self.arena.floor.shape:getPoints()))
+    -- for _, body in pairs(self.arena) do
+    --     print(body)
+    --     for _, fixture in pairs(body:getFixtures()) do
+    --         local shape = fixture:getShape()
+    --         love.graphics.polygon("fill", body:getWorldPoints(shape:getPoints()))
+    --     end
+    -- end
 end
