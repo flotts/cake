@@ -16,8 +16,13 @@ function love.update(dt)
     cake:update(dt)
 end
 
+worldTranslation = {
+    x = 400,
+    y = 300
+}
+
 function love.draw()
-    love.graphics.translate(400, 300)
+    love.graphics.translate(worldTranslation.x, worldTranslation.y)
     love.graphics.scale(2)
 
     love.graphics.translate(-cake.body:getX(), -cake.body:getY())

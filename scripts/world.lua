@@ -15,6 +15,9 @@ function world:load()
     world:newArenaStructure("leftWall", -200, 0, 10, 500)
     world:newArenaStructure("rightWall", 200, 0, 10, 500)
     world:newArenaStructure("ceiling", 0, -200, 500, 10)
+
+    -- Loading background image: 
+    background = love.graphics.newImage("/assets/wallpaper.png")
 end
 
 function world:newArenaStructure(id, x, y, w, h)
@@ -29,9 +32,17 @@ function world:update(dt)
 end
 
 function world:draw()
-    love.graphics.setColor(1,1,1)
+    -- Tiling background wallpaper:
+    for i = 0, love.graphics.getWidth() / background:getWidth() do
+        for j = 0, love.graphics.getHeight() / background:getHeight() do
+            love.graphics.draw(background, (i * background:getWidth()) - worldTranslation.x, (j * background:getHeight()) - worldTranslation.y)
+        end
+    end
+
     love.graphics.polygon("fill", self.arena.floor.body:getWorldPoints(self.arena.floor.shape:getPoints()))
     love.graphics.polygon("fill", self.arena.leftWall.body:getWorldPoints(self.arena.leftWall.shape:getPoints()))
     love.graphics.polygon("fill", self.arena.rightWall.body:getWorldPoints(self.arena.rightWall.shape:getPoints()))
     love.graphics.polygon("fill", self.arena.ceiling.body:getWorldPoints(self.arena.ceiling.shape:getPoints()))
+
+    
 end
