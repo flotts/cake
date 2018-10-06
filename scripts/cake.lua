@@ -1,12 +1,15 @@
 cake = {}
 
-cake.x = 400
-cake.y = 300
+cake.x = 0
+cake.y = 0
 cake.xVel = 0
 cake.yVel = 0
 
 cake.spd = 100
 cake.weight = 1000
+
+local mirror = 1                -- -1 for normal, 1 for mirrored
+local spriteXTranslate = -8     -- Set to 8 to mirror image (shifting it 16)
 
 function cake:load()
     self.body = love.physics.newBody(world.world, self.x, self.y, "dynamic")
@@ -33,15 +36,17 @@ function cake:update(dt)
     self.xVel, self.yVel = self.body:getLinearVelocity()
     if love.keyboard.isDown("left") then
         self.body:setLinearVelocity(-self.spd, self.yVel)
+        mirror = -1
+        spriteXTranslate = 8
     elseif love.keyboard.isDown("right") then
         self.body:setLinearVelocity(self.spd, self.yVel)
+        mirror = 1
+        spriteXTranslate = -8
     else 
         self.body:setLinearVelocity(0, self.yVel)
     end
 end
 
 function cake:draw()
-    -- love.graphics.setColor(1, 0, 0)
-    -- love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
-    love.graphics.draw(standSprite, self.x - 8, self.y - 8)
+    love.graphics.draw(standSprite, self.x + spriteXTranslate, self.y - 8, 0, mirror, 1)
 end
