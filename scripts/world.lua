@@ -12,10 +12,10 @@ function world:load()
     self.world = love.physics.newWorld(self.gravity.x, self.gravity.y)
 
     -- platform
-    world:newArenaStructure("floor", 400, 500, 500, 10)
-    world:newArenaStructure("leftWall", 200, 300, 10, 500)
-    world:newArenaStructure("rightWall", 600, 300, 10, 500)
-    world:newArenaStructure("ceiling", 400, 100, 500, 10)
+    world:newArenaStructure("floor", 0, 200, 500, 10)
+    world:newArenaStructure("leftWall", -200, 0, 10, 500)
+    world:newArenaStructure("rightWall", 200, 0, 10, 500)
+    world:newArenaStructure("ceiling", 0, -200, 500, 10)
 end
 
 function world:newArenaStructure(id, x, y, w, h)

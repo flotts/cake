@@ -17,6 +17,16 @@ function cake:load()
     standSprite = love.graphics.newImage("/assets/cake_standing_1.png")
 end
 
+function cake:keyPressed(key)
+    if key == "space" then
+        self.body:applyLinearImpulse(0, -500)
+    elseif key == "a" then
+        self:rotate("left")
+    elseif key == "d" then
+        self:rotate("right")
+    end
+end
+
 function cake:update(dt)
     self.x = self.body:getX()
     self.y = self.body:getY()
