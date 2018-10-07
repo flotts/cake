@@ -13,6 +13,8 @@ world.gravity = {
 
 function world:load()
     self.world = love.physics.newWorld(self.gravity.x, self.gravity.y)
+    -- Defines contact functions, which are at the bottom of this page
+    self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
     world:newArenaStructure(0, 15, 31, 1)
     world:newArenaStructure(-15, 0, 1, 31)
@@ -43,6 +45,8 @@ function world:newArenaStructure(x, y, w, h)
     myStruct.x = x
     myStruct.width = w
     myStruct.height = h
+    myStruct.fixture:setUserData("ground")
+
     table.insert(self.arena.ironBlocks, myStruct)
 end
 
@@ -59,6 +63,8 @@ function world:newBreakableStructure(x, y)
     myStruct.x = x
     myStruct.width = w
     myStruct.height = h
+    myStruct.fixture:setUserData("ground")
+
     table.insert(self.arena.dirtBlocks, myStruct)
 end
 
@@ -108,4 +114,31 @@ function world:draw()
         local yStart = self.arena.dirtBlocks[i].y - (self.arena.dirtBlocks[i].height / 2)
         love.graphics.draw(dirtBlockSprite, xStart, yStart, 0, 1, 1)
     end
+end
+
+
+-- CONTACT FUNCTIONS:
+function beginContact(a, b, coll)
+    x,y = coll:getNormal()
+    local aType = a:getUserData()
+    local bType = b:getUserData()
+    -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
+    print(a:getUserData())
+    print(b:getUserData())
+    if aType == "ground" and bType == "cake" then
+        print("Grounded??")
+        cake.isGrounded = true
+    end
+end
+ 
+function endContact(a, b, coll)
+ 
+end
+ 
+function preSolve(a, b, coll)
+ 
+end
+ 
+function postSolve(a, b, coll, normalimpulse, tangentimpulse)
+ 
 end
