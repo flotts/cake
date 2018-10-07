@@ -108,7 +108,6 @@ function cake:keypressed(key)
     if key == "l" then
         print("grav.dir.x: ", self.grav.dir.x)
         print("grav.dir.y: ", self.grav.dir.y)
-        
         print("rot.rot: ", self.rot.rot)
     end
 end
@@ -196,9 +195,9 @@ function cake:update(dt)
         self.rot.ing = false
     end
 
-    -- Handling gravity:
-    self.grav.dir.x = math.floor(math.sin(self.rot.rot) + 0.5)
-    self.grav.dir.y = math.floor(math.cos(self.rot.rot) + 0.5)
+    -- Handling gravity (using a floor rounding technique that makes me sad inside):
+    self.grav.dir.x = math.floor(math.sin(self.rot.rot) + 0.1)
+    self.grav.dir.y = math.floor(math.cos(self.rot.rot) + 0.1)
 
     world.world:setGravity(self.grav.amt * self.grav.dir.x, self.grav.amt * self.grav.dir.y)
 
@@ -216,8 +215,10 @@ function cake:update(dt)
     end
 
     if self.dead then
-        self.body:setPosition(0, 0)
+        -- Reset rotation, reset location, reset velocity (& add a little nudge to prevent box2d from acting weird)
         self.rot.snap = 0
+        self.body:setPosition(0, 0)
+        self.body:setLinearVelocity(0, 1)
         self.dead = false
     end
     
