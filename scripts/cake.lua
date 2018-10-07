@@ -1,6 +1,5 @@
 cake = {}
 
--- Rotate variables:
 -- rotation variable table
 cake.rot = {
     rot = 0,         -- Current rotation, handles intermediate values
@@ -26,7 +25,7 @@ cake.hasFallen = false          -- Used to help indicate whether Cake can jump
 
 -- Variables used to keep track of which way Cake is facing
 local mirror = 1                -- -1 for normal, 1 for mirrored
-local spriteXTranslate = -8     -- Set to 8 to mirror image (shifting it 16)
+local spriteXTranslate = 0      -- Set to 8 to mirror image (shifting it 16)
 
 local runFrames = {}
 local activeRunFrame            -- Stores the actual data of the frame location
@@ -84,12 +83,10 @@ function cake:update(dt)
     if love.keyboard.isDown("left") then
         self.body:setLinearVelocity(-self.spd, self.yVel)
         mirror = -1
-        spriteXTranslate = 8
         self.state = "run"
     elseif love.keyboard.isDown("right") then
         self.body:setLinearVelocity(self.spd, self.yVel)
         mirror = 1
-        spriteXTranslate = -8
         self.state = "run"
     else 
         self.body:setLinearVelocity(0, self.yVel)
@@ -124,8 +121,8 @@ end
 function cake:draw()
     -- Iterating through active run frames!!
     if (self.state == "stand") then
-        love.graphics.draw(standSprite, self.body:getX() + spriteXTranslate, self.body:getY() - 8, self.rot.exactAngle, mirror, 1)
+        love.graphics.draw(standSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
     elseif (self.state == "run") then
-        love.graphics.draw(walkSpriteSheet,activeRunFrame, self.body:getX() + spriteXTranslate, self.body:getY() - 8, self.rot.exactAngle, mirror, 1)
+        love.graphics.draw(walkSpriteSheet,activeRunFrame, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
     end
 end
