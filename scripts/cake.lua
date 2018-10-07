@@ -76,13 +76,9 @@ function cake:keypressed(key)
         self.body:applyLinearImpulse(0, -350)
         self.isGrounded = false
     elseif key == "a" then
-        if not self.rot.ing then 
-            self:rotate("left")
-        end
+        if not self.rot.ing then self:rotate("left") end
     elseif key == "d" then
-        if not self.rot.ing then
-            self:rotate("right")
-        end
+        if not self.rot.ing then self:rotate("right") end
     end
 end
 
