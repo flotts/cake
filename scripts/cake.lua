@@ -94,9 +94,9 @@ function cake:keypressed(key)
         self.isGrounded = false
         self.state = "jump"
     elseif key == "a" then
-        if not self.rot.ing and not self.hasRotated and not self.isGrounded then self:rotate("left") end
+        if not self.rot.ing and not self.hasRotated then self:rotate("left") end
     elseif key == "d" then
-        if not self.rot.ing and not self.hasRotated and not self.isGrounded then self:rotate("right") end
+        if not self.rot.ing and not self.hasRotated then self:rotate("right") end
     elseif key == "l" then
         print("grav.dir.x: ", self.grav.dir.x)
         print("grav.dir.y: ", self.grav.dir.y)
