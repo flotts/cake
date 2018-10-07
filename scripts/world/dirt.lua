@@ -10,6 +10,7 @@ function dirt:load()
     dirt:new(-5, -10)
     dirt:new(5, -9)
     dirt:new(-3, 9)
+    dirt:new(12, 3)
 end
 
 function dirt:new(x, y)

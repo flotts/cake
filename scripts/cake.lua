@@ -3,8 +3,8 @@ cake = {}
 -- rotation variable table
 cake.rot = {
     rot = 0,         -- Current rotation, handles intermediate values
-    snap = 0,          -- Set to 90deg angles
-    ing = false,     -- Whether or not the character is undergoing a rotation
+    snap = 0,        -- Set to 90deg angles
+    ing = false,     -- Whether or not the character is mid-rotation
     dir = 0,
     dur = 0.25
 }
@@ -27,8 +27,6 @@ cake.yVel = 0
 
 -- Walk speed
 cake.spd = 150
--- Gravity
-cake.weight = 1000
 
 cake.state = "stand"            -- stand, run, jump
 cake.isGrounded = false         -- Used to help indicate whether Cake can jump
@@ -57,10 +55,10 @@ function cake:load()
     self.fixture:setRestitution(0.125)
 
     -- Setting up sprite:
-    standSprite = love.graphics.newImage("/assets/cake_standing_1.png")
-    jumpSprite = love.graphics.newImage("/assets/cake_jumping_1.png")
+    standSprite = love.graphics.newImage("/assets/cake/standing_1.png")
+    jumpSprite = love.graphics.newImage("/assets/cake/jumping_1.png")
 
-    walkSpriteSheet = love.graphics.newImage("/assets/cake_running_1.png")
+    walkSpriteSheet = love.graphics.newImage("/assets/cake/running_1.png")
     runFrames[1] = love.graphics.newQuad(0,0,16,16,walkSpriteSheet:getDimensions())
     runFrames[2] = love.graphics.newQuad(16,0,16,16,walkSpriteSheet:getDimensions())
     runFrames[3] = love.graphics.newQuad(32,0,16,16,walkSpriteSheet:getDimensions())

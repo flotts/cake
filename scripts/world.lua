@@ -41,20 +41,20 @@ function world:draw()
     bread:draw()
 end
 
--- contact functions
+-- contact behavior
 function beginContact(a, b, coll)
     x, y = coll:getNormal()
     local aType = a:getUserData()
     local bType = b:getUserData()
     -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
-    if aType == "iron" and bType == "cake" then
+    if ((aType == "iron" or aType == "dirt") and bType == "cake") or (aType == "cake" and (bType == "iron" or bType == "dirt")) then
         cake.isGrounded = true
         cake.hasRotated = false
     end
     
-    if aType == "cake" and bType == "spike" then 
+    if (aType == "spike" and bType == "cake") or (aType == "cake" and bType == "spike") then
+        -- todo: add death animation
         cake:respawn()
-        print("cake hit a spike!")
     end
 end
  
