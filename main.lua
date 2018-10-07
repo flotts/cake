@@ -2,6 +2,10 @@ require "scripts/world"
 require "scripts/cake"
 require "scripts/spikes"
 
+    pantsMusic = love.audio.newSource("/assets/chiptune.mp3", "stream")
+    pantsMusic:setLooping(true)
+    pantsMusic:play()
+
 function love.load()
     love.graphics.setDefaultFilter("nearest")
     world:load()
