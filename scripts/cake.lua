@@ -49,6 +49,7 @@ local elapsedTime = 0
 function cake:load()
     -- Setting up our collision box:
     self.body = love.physics.newBody(world.world, self.x, self.y, "dynamic")
+    self.body:setFixedRotation(true)
     self.shape = love.physics.newRectangleShape(16, 16)
     self.fixture = love.physics.newFixture(self.body, self.shape, 5)
     self.fixture:setUserData("cake")
@@ -102,7 +103,10 @@ function cake:keypressed(key)
         if not self.rot.ing and not self.hasRotated then self:rotate("left") end
     elseif key == "d" then
         if not self.rot.ing and not self.hasRotated then self:rotate("right") end
-    elseif key == "l" then
+    end
+    
+    -- log (for dev)
+    if key == "l" then
         print("grav.dir.x: ", self.grav.dir.x)
         print("grav.dir.y: ", self.grav.dir.y)
         
