@@ -6,13 +6,8 @@ world.arena = {
     dirtBlocks = {}
 }
 
-world.gravity = {
-    x = 0,
-    y = 500
-}
-
 function world:load()
-    self.world = love.physics.newWorld(self.gravity.x, self.gravity.y)
+    self.world = love.physics.newWorld()
 
     world:newArenaStructure(0, 15, 31, 1)
     world:newArenaStructure(-15, 0, 1, 31)

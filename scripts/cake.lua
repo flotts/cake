@@ -3,9 +3,18 @@ cake = {}
 -- rotation variable table
 cake.rot = {
     rot = 0,         -- Current rotation, handles intermediate values
-    base = 0,          -- Set to 90deg angles
+    snap = 0,          -- Set to 90deg angles
     ing = false,     -- Whether or not the character is undergoing a rotation
     dir = 0
+}
+
+-- gravity variable table
+cake.grav = {
+    dir = {
+        x = 0,
+        y = 1
+    },
+    amt = 500
 }
 
 -- X and Y coords
@@ -40,7 +49,7 @@ function cake:load()
     self.fixture = love.physics.newFixture(self.body, self.shape, 5)
     self.fixture:setFriction(0)
 
-    -- setting up sprite:
+    -- Setting up sprite:
     standSprite = love.graphics.newImage("/assets/cake_standing_1.png")
 
     walkSpriteSheet = love.graphics.newImage("/assets/cake_running_1.png")
@@ -61,7 +70,7 @@ function cake:rotate(direction)
 end
 
 
-function cake:keyPressed(key)
+function cake:keypressed(key)
     if key == "space" and self.yVel <= .01 then
         self.body:applyLinearImpulse(0, -350)
         cake.hasFallen = false
@@ -79,7 +88,7 @@ end
 function cake:update(dt)
     self.xVel, self.yVel = self.body:getLinearVelocity()
 
-    -- Handling right left motion:
+    -- Handling right & left motion:
     if love.keyboard.isDown("left") then
         self.body:setLinearVelocity(-self.spd, self.yVel)
         mirror = -1
@@ -95,14 +104,21 @@ function cake:update(dt)
 
     -- Handling rotation:
     if self.rot.ing and love.timer.getTime() - self.rot.start < 0.5 then
-        self.rot.rot = self.rot.base + (((love.timer.getTime() - self.rot.start) * 2) * (math.pi / 2) * self.rot.dir)
+        self.rot.rot = self.rot.snap + (((love.timer.getTime() - self.rot.start) * 2) * (math.pi / 2) * self.rot.dir)
     else
-        self.rot.rot = self.rot.base + (math.pi / 2) * self.rot.dir
+        self.rot.rot = self.rot.snap + (math.pi / 2) * self.rot.dir
         self.rot.dir = 0
-        self.rot.base = self.rot.rot
+        self.rot.snap = self.rot.rot
 
         self.rot.ing = false
     end
+
+    -- Handling gravity:
+    self.grav.dir = {
+        x = math.sin(self.rot.rot),
+        y = math.cos(self.rot.rot)
+    }
+    world.world:setGravity(self.grav.amt * self.grav.dir.x, self.grav.amt * self.grav.dir.y)
 
     -- Handling walk frames:
     elapsedTime = elapsedTime + dt
@@ -119,7 +135,7 @@ function cake:update(dt)
 end
 
 function cake:draw()
-    -- Iterating through active run frames!!
+    -- Iterating through active run frames:
     if (self.state == "stand") then
         love.graphics.draw(standSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
     elseif (self.state == "run") then
