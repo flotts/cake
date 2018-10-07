@@ -1,5 +1,14 @@
 cake = {}
 
+-- Rotate variables:
+-- rotation variable table
+cake.rot = {
+    exactAngle = 0,         -- Current rotation, handles intermediate values
+    snapAngle = 0,          -- Set to 90deg angles
+    isRotating = false,     -- Whether or not the character is undergoing a rotation
+    dir = 0                 -- 
+}
+
 -- X and Y coords
 cake.x = 0
 cake.y = 0
@@ -46,6 +55,10 @@ function cake:keyPressed(key)
     if key == "space" and self.yVel <= .01 then
         self.body:applyLinearImpulse(0, -350)
         cake.hasFallen = false
+    elseif key == "a" then
+        self:rotate("left")
+    elseif key == "d" then
+        self:rotate("right")
     end
 end
 
@@ -68,6 +81,16 @@ function cake:update(dt)
         self.state = "stand"
     end
 
+    -- Handling rotation:
+    if self.rot.isRotating and love.timer.getTime() - self.rot.start < 0.5 then
+        self.rot.exactAngle = self.rot.snapAngle + (((love.timer.getTime() - self.rot.start) * 2) * (math.pi / 2) * self.rot.dir)
+    else
+        self.rot.isRotating = false
+        self.rot.exactAngle = self.rot.snapAngle + (math.pi / 2) * self.rot.dir
+        self.rot.dir = 0
+        self.rot.snapAngle = self.rot.exactAngle
+    end
+
     -- Handling walk frames:
     elapsedTime = elapsedTime + dt
 
@@ -85,8 +108,18 @@ end
 function cake:draw()
     -- Iterating through active run frames!!
     if (self.state == "stand") then
-        love.graphics.draw(standSprite, self.body:getX() + spriteXTranslate, self.body:getY() - 8, 0, mirror, 1)
+        love.graphics.draw(standSprite, self.body:getX() + spriteXTranslate, self.body:getY() - 8, self.rot.exactAngle, mirror, 1)
     elseif (self.state == "run") then
-        love.graphics.draw(walkSpriteSheet,activeRunFrame, self.body:getX() + spriteXTranslate, self.body:getY() - 8, 0, mirror, 1)
+        love.graphics.draw(walkSpriteSheet,activeRunFrame, self.body:getX() + spriteXTranslate, self.body:getY() - 8, self.rot.exactAngle, mirror, 1)
     end
+end
+
+function cake:rotate(direction)
+    self.rot.isRotating = true
+    if direction == "right" then
+        self.rot.dir = 1
+    else
+        self.rot.dir = -1
+    end
+    self.rot.start = love.timer.getTime()
 end

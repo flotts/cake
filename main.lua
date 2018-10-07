@@ -26,6 +26,9 @@ function love.draw()
     love.graphics.scale(2)
     love.graphics.translate(-cake.body:getX(), -cake.body:getY())
 
+    love.graphics.rotate(cake.rot.exactAngle)
+    love.graphics.print(cake.rot.exactAngle)
+
     world:draw()
     cake:draw()
 end

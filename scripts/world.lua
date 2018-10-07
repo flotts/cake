@@ -55,7 +55,7 @@ function world:draw()
     -- Tiling solid blocks: 
     for i in ipairs(self.arena) do
         -- Adding white background, for debugging:
-        love.graphics.polygon("fill", self.arena[i].body:getWorldPoints(self.arena[i].shape:getPoints()))
+    -- love.graphics.polygon("fill", self.arena[i].body:getWorldPoints(self.arena[i].shape:getPoints()))
         -- xStart calculates the top right corner of the box
         local xStart = self.arena[i].x - (self.arena[i].width / 2)
         local yStart = self.arena[i].y - (self.arena[i].height / 2)
