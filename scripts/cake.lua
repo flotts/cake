@@ -71,7 +71,6 @@ function cake:rotate(direction)
     self.rot.start = love.timer.getTime()
 end
 
-
 function cake:keypressed(key)
     if key == "space" and cake.isGrounded then
         if self.grav.dir.x == 0 then
@@ -93,6 +92,11 @@ function cake:keypressed(key)
         if not self.rot.ing then self:rotate("left") end
     elseif key == "d" then
         if not self.rot.ing then self:rotate("right") end
+    elseif key == "l" then
+        print("grav.dir.x: ", self.grav.dir.x)
+        print("grav.dir.y: ", self.grav.dir.y)
+        
+        print("rot.rot: ", self.rot.rot)
     end
 end
 
@@ -121,24 +125,14 @@ function cake:update(dt)
             if self.grav.dir.x == 0 then
                 if self.grav.dir.y > 0 then
                     self.body:setLinearVelocity(-self.spd, self.yVel)
-                    print("Gravity is right side up!")
-                    print(self.grav.dir.y)
                 else
                     self.body:setLinearVelocity(self.spd, self.yVel)
-                    print("Gravity is upside down!")
-                    print(self.grav.dir.y)
                 end
             else -- If gravity is sideways
                 if self.grav.dir.x > 0 then
                     self.body:setLinearVelocity(self.xVel, self.spd)
-                    print("Gravity is rotated ... left?")
-                    print(self.grav.dir.y)
-                    print(self.grav.dir.x)
                 else
                     self.body:setLinearVelocity(self.xVel, -self.spd)
-                    print("Gravity is rotated ... right?")
-                    print(self.grav.dir.y)
-                    print(self.grav.dir.x)
                 end
             end
             mirror = -1
@@ -178,8 +172,8 @@ function cake:update(dt)
     end
 
     -- Handling rotation:
-    if self.rot.ing and love.timer.getTime() - self.rot.start < 0.5 then
-        self.rot.rot = self.rot.snap + (((love.timer.getTime() - self.rot.start) * 2) * (math.pi / 2) * self.rot.dir)
+    if self.rot.ing and love.timer.getTime() - self.rot.start < 0.125 then
+        self.rot.rot = self.rot.snap + (((love.timer.getTime() - self.rot.start) * 8) * (math.pi / 2) * self.rot.dir)
     else
         self.rot.rot = self.rot.snap + (math.pi / 2) * self.rot.dir
         self.rot.dir = 0
@@ -189,10 +183,9 @@ function cake:update(dt)
     end
 
     -- Handling gravity:
-    self.grav.dir = {
-        x = math.sin(self.rot.rot),
-        y = math.cos(self.rot.rot)
-    }
+    self.grav.dir.x = math.floor(math.sin(self.rot.rot) + 0.5)
+    self.grav.dir.y = math.floor(math.cos(self.rot.rot) + 0.5)
+
     world.world:setGravity(self.grav.amt * self.grav.dir.x, self.grav.amt * self.grav.dir.y)
 
     -- Handling walk frames:
