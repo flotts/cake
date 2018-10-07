@@ -18,6 +18,7 @@ function world:load()
 
     -- Starting block
     world:newArenaStructure(0,3, 4, 2)
+    world:newArenaStructure(10,-5, 10, 2)
 
     world:newArenaStructure(7, 10, 3, 2)
 
@@ -127,6 +128,7 @@ function beginContact(a, b, coll)
     -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
     if aType == "ground" and bType == "cake" then
         cake.isGrounded = true
+        cake.hasRotated = false
     elseif aType == "spike" and bType == "cake" then
         print("Collided w spike!! ")
         cake.x = 0
@@ -135,7 +137,7 @@ function beginContact(a, b, coll)
     
     if aType == "cake" and bType == "spike" then 
         cake:death()
-        cake.hasRotated = false
+        
     end
 end
  
