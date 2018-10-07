@@ -123,10 +123,7 @@ function beginContact(a, b, coll)
     local aType = a:getUserData()
     local bType = b:getUserData()
     -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
-    print(a:getUserData())
-    print(b:getUserData())
     if aType == "ground" and bType == "cake" then
-        print("Grounded??")
         cake.isGrounded = true
     end
 end
