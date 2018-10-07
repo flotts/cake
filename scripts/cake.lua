@@ -178,7 +178,7 @@ function cake:update(dt)
 
     -- Handling rotation:
     if self.rot.ing and love.timer.getTime() - self.rot.start < 0.125 then
-        self.rot.rot = self.rot.snap + (((love.timer.getTime() - self.rot.start) * 8) * (math.pi / 2) * self.rot.dir)
+        self.rot.rot = self.rot.snap + (((love.timer.getTime() - self.rot.start) * 8) * (math.pi / 2) * self.rot.dir --[[* ease()]])
     else
         self.rot.rot = self.rot.snap + (math.pi / 2) * self.rot.dir
         self.rot.dir = 0
