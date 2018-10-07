@@ -16,6 +16,8 @@ function world:load()
     world:newArenaStructure(15, 0, 1, 31)
     world:newArenaStructure(0, -15, 31, 1)
 
+    world: newArenaStructure(7, 10, 3, 2)
+
     -- Loading images: 
     background = love.graphics.newImage("/assets/wallpaper.png")
     blockSprite = love.graphics.newImage("/assets/iron_block.png")
@@ -59,11 +61,11 @@ function world:draw()
         local yStart = self.arena[i].y - (self.arena[i].height / 2)
         -- These will be used to iterate through the width and height in increments of 16
         local widthRemaining = self.arena[i].width
-        local heightRemaining = self.arena[i].height
 
         -- We'll subtract 16 from widthRemaining until it's 0
         while widthRemaining > 0 do
             local xVal = xStart + self.arena[i].width - widthRemaining
+            local heightRemaining = self.arena[i].height
 
             while heightRemaining > 0 do
                 local yVal = yStart + self.arena[i].height - heightRemaining
