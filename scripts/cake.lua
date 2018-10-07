@@ -34,9 +34,8 @@ cake.hasRotated = false
 
 cake.dead = false
 
--- Variables used to keep track of which way Cake is facing
+-- Variable used to keep track of which way Cake is facing
 local mirror = 1                -- -1 for normal, 1 for mirrored
-local spriteXTranslate = 0      -- Set to 8 to mirror image (shifting it 16)
 
 local runFrames = {}
 local activeRunFrame            -- Stores the actual data of the frame location
