@@ -67,9 +67,13 @@ function cake:keyPressed(key)
         self.body:applyLinearImpulse(0, -350)
         cake.hasFallen = false
     elseif key == "a" then
-        self:rotate("left")
+        if not self.rot.ing then 
+            self:rotate("left")
+        end
     elseif key == "d" then
-        self:rotate("right")
+        if not self.rot.ing then
+            self:rotate("right")
+        end
     end
 end
 
