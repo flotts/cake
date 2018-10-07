@@ -30,7 +30,7 @@ cake.spd = 100
 cake.weight = 1000
 
 cake.state = "stand"            -- stand or run
-cake.hasFallen = false          -- Used to help indicate whether Cake can jump
+cake.isGrounded = false          -- Used to help indicate whether Cake can jump
 
 -- Variables used to keep track of which way Cake is facing
 local mirror = 1                -- -1 for normal, 1 for mirrored
@@ -47,6 +47,7 @@ function cake:load()
     self.body = love.physics.newBody(world.world, self.x, self.y, "dynamic")
     self.shape = love.physics.newRectangleShape(16, 16)
     self.fixture = love.physics.newFixture(self.body, self.shape, 5)
+    self.fixture:setUserData("cake")
     self.fixture:setFriction(0)
 
     -- Setting up sprite:
@@ -70,10 +71,10 @@ function cake:rotate(direction)
 end
 
 
-function cake:keypressed(key)
-    if key == "space" and self.yVel <= .01 then
+function cake:keyPressed(key)
+    if key == "space" and self.yVel <= .01 and cake.isGrounded then
         self.body:applyLinearImpulse(0, -350)
-        cake.hasFallen = false
+        self.isGrounded = false
     elseif key == "a" then
         if not self.rot.ing then 
             self:rotate("left")
@@ -132,6 +133,7 @@ function cake:update(dt)
         activeRunFrame = runFrames[currentRunFrame]
         elapsedTime = 0
     end
+
 end
 
 function cake:draw()

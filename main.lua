@@ -8,7 +8,7 @@ function love.load()
 end
 
 function love.keypressed(key)
-    cake:keypressed(key)
+    cake:keyPressed(key)
 end
 
 function love.update(dt)
