@@ -120,6 +120,7 @@ function beginContact(a, b, coll)
     -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
     if aType == "ground" and bType == "cake" then
         cake.isGrounded = true
+        cake.hasRotated = false
     end
 end
  

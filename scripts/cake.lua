@@ -31,6 +31,7 @@ cake.weight = 1000
 
 cake.state = "stand"            -- stand, run, jump
 cake.isGrounded = false         -- Used to help indicate whether Cake can jump
+cake.hasRotated = false
 
 -- Variables used to keep track of which way Cake is facing
 local mirror = 1                -- -1 for normal, 1 for mirrored
@@ -64,6 +65,7 @@ end
 
 function cake:rotate(direction)
     self.rot.ing = true
+    self.hasRotated = true
     if direction == "right" then
         self.rot.dir = 1
     else
@@ -90,9 +92,9 @@ function cake:keypressed(key)
         self.isGrounded = false
         self.state = "jump"
     elseif key == "a" then
-        if not self.rot.ing then self:rotate("left") end
+        if not self.rot.ing and not self.hasRotated and not self.isGrounded then self:rotate("left") end
     elseif key == "d" then
-        if not self.rot.ing then self:rotate("right") end
+        if not self.rot.ing and not self.hasRotated and not self.isGrounded then self:rotate("right") end
     elseif key == "l" then
         print("grav.dir.x: ", self.grav.dir.x)
         print("grav.dir.y: ", self.grav.dir.y)
