@@ -20,8 +20,8 @@ cake.spd = 100
 -- Gravity
 cake.weight = 1000
 
-cake.state = "stand"            -- stand or run
-cake.isGrounded = false          -- Used to help indicate whether Cake can jump
+cake.state = "stand"            -- stand, run, jump
+cake.isGrounded = false         -- Used to help indicate whether Cake can jump
 
 -- Variables used to keep track of which way Cake is facing
 local mirror = 1                -- -1 for normal, 1 for mirrored
@@ -43,6 +43,7 @@ function cake:load()
 
     -- setting up sprite:
     standSprite = love.graphics.newImage("/assets/cake_standing_1.png")
+    jumpSprite = love.graphics.newImage("/assets/cake_jumping_1.png")
 
     walkSpriteSheet = love.graphics.newImage("/assets/cake_running_1.png")
     runFrames[1] = love.graphics.newQuad(0,0,16,16,walkSpriteSheet:getDimensions())
@@ -66,6 +67,7 @@ function cake:keyPressed(key)
     if key == "space" and self.yVel <= .01 and cake.isGrounded then
         self.body:applyLinearImpulse(0, -350)
         self.isGrounded = false
+        self.state = "jump"
     elseif key == "a" then
         if not self.rot.ing then 
             self:rotate("left")
@@ -84,14 +86,20 @@ function cake:update(dt)
     if love.keyboard.isDown("left") then
         self.body:setLinearVelocity(-self.spd, self.yVel)
         mirror = -1
-        self.state = "run"
+        if (self.isGrounded) then
+            self.state = "run"
+        end
     elseif love.keyboard.isDown("right") then
         self.body:setLinearVelocity(self.spd, self.yVel)
         mirror = 1
-        self.state = "run"
+        if (self.isGrounded) then
+            self.state = "run"
+        end
     else 
         self.body:setLinearVelocity(0, self.yVel)
-        self.state = "stand"
+        if (self.isGrounded) then 
+            self.state = "stand"
+        end
     end
 
     -- Handling rotation:
@@ -126,5 +134,7 @@ function cake:draw()
         love.graphics.draw(standSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
     elseif (self.state == "run") then
         love.graphics.draw(walkSpriteSheet,activeRunFrame, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
+    elseif (self.state == "jump") then
+        love.graphics.draw(jumpSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
     end
 end
