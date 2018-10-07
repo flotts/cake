@@ -101,6 +101,8 @@ function cake:keypressed(key)
         if not self.rot.ing and not self.hasRotated then self:rotate("left") end
     elseif key == "d" then
         if not self.rot.ing and not self.hasRotated then self:rotate("right") end
+    elseif key == "r" then
+        cake:respawn()
     end
     
     -- log (for dev)
