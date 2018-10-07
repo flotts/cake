@@ -6,13 +6,8 @@ world.arena = {
     dirtBlocks = {}
 }
 
-world.gravity = {
-    x = 0,
-    y = 500
-}
-
 function world:load()
-    self.world = love.physics.newWorld(self.gravity.x, self.gravity.y)
+    self.world = love.physics.newWorld()
     -- Defines contact functions, which are at the bottom of this page
     self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
