@@ -73,8 +73,20 @@ end
 
 
 function cake:keypressed(key)
-    if key == "space" and self.yVel <= .01 and cake.isGrounded then
-        self.body:applyLinearImpulse(0, -350)
+    if key == "space" and cake.isGrounded then
+        if self.grav.dir.x == 0 then
+            if self.grav.dir.y > 0 then
+                self.body:applyLinearImpulse(0, -350)
+            else
+                self.body:applyLinearImpulse(0, 350)
+            end
+        else
+            if self.grav.dir.x > 0 then
+                self.body:applyLinearImpulse(-350, 0)
+            else
+                self.body:applyLinearImpulse(350, 0)
+            end
+        end
         self.isGrounded = false
         self.state = "jump"
     elseif key == "a" then
@@ -88,22 +100,72 @@ function cake:update(dt)
     self.xVel, self.yVel = self.body:getLinearVelocity()
 
     -- Handling right & left motion:
-    if love.keyboard.isDown("left") then
-        self.body:setLinearVelocity(-self.spd, self.yVel)
-        mirror = -1
-        if (self.isGrounded) then
-            self.state = "run"
+    if self.rot.ing then
+        -- This this is for is you're in the middle of a rotation, because we couldn't figure out a better way to do it
+        if love.keyboard.isDown("left") then
+            self.body:applyForce(self.spd * self.grav.dir.x, self.spd * self.grav.dir.y)
+            mirror = -1
+            if (self.isGrounded) then
+                self.state = "run"
+            end
+        elseif love.keyboard.isDown("right") then
+            self.body:applyForce(self.spd * self.grav.dir.x, self.spd * self.grav.dir.y)
+            mirror = 1
+            if (self.isGrounded) then
+                self.state = "run"
+            end
         end
-    elseif love.keyboard.isDown("right") then
-        self.body:setLinearVelocity(self.spd, self.yVel)
-        mirror = 1
-        if (self.isGrounded) then
-            self.state = "run"
-        end
-    else 
-        self.body:setLinearVelocity(0, self.yVel)
-        if (self.isGrounded) then 
-            self.state = "stand"
+    else
+        if love.keyboard.isDown("left") then
+            -- If gravity is either upright or upside down
+            if self.grav.dir.x == 0 then
+                if self.grav.dir.y > 0 then
+                    self.body:setLinearVelocity(-self.spd, self.yVel)
+                    print("rerr")
+                else
+                    self.body:setLinearVelocity(self.spd, self.yVel)
+                    print("asdf")
+                end
+            else -- If gravity is sideways
+                if self.grav.dir.x > 0 then
+                    self.body:setLinearVelocity(self.xVel, self.spd)
+                else
+                    self.body:setLinearVelocity(self.xVel, -self.spd)
+                end
+            end
+            mirror = -1
+            if (self.isGrounded) then
+                self.state = "run"
+            end
+        elseif love.keyboard.isDown("right") then
+            -- If gravity is either upright or upside down
+            if self.grav.dir.x == 0 then
+                if self.grav.dir.y > 0 then
+                    self.body:setLinearVelocity(self.spd, self.yVel)
+                else
+                    self.body:setLinearVelocity(-self.spd, self.yVel)
+                end
+            else -- If gravity is sideways
+                if self.grav.dir.x > 0 then
+                    self.body:setLinearVelocity(self.xVel, -self.spd)
+                else
+                    self.body:setLinearVelocity(self.xVel, self.spd)
+                end
+            end
+            mirror = 1
+            if self.isGrounded then
+                self.state = "run"
+            end
+        else
+            if self.grav.dir.x == 0 then
+                self.body:setLinearVelocity(0, self.yVel)
+            else
+                self.body:setLinearVelocity(self.xVel, 0)
+            end
+
+            if (self.isGrounded) then 
+                self.state = "stand"
+            end
         end
     end
 
