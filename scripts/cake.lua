@@ -52,7 +52,7 @@ function cake:load()
     self.fixture = love.physics.newFixture(self.body, self.shape, 5)
     self.fixture:setUserData("cake")
     self.fixture:setFriction(0)
-    self.fixture:setRestitution(0.125)
+    self.fixture:setRestitution(0.2)
 
     -- Setting up sprite:
     standSprite = love.graphics.newImage("/assets/cake/standing_1.png")
