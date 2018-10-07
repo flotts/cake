@@ -135,6 +135,7 @@ function beginContact(a, b, coll)
     
     if aType == "cake" and bType == "spike" then 
         cake:death()
+        cake.hasRotated = false
     end
 end
  

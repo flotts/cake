@@ -25,12 +25,13 @@ cake.xVel = 0
 cake.yVel = 0
 
 -- Walk speed
-cake.spd = 100
+cake.spd = 150
 -- Gravity
 cake.weight = 1000
 
 cake.state = "stand"            -- stand, run, jump
 cake.isGrounded = false         -- Used to help indicate whether Cake can jump
+cake.hasRotated = false
 
 cake.dead = false
 
@@ -51,6 +52,7 @@ function cake:load()
     self.fixture = love.physics.newFixture(self.body, self.shape, 5)
     self.fixture:setUserData("cake")
     self.fixture:setFriction(0)
+    self.fixture:setRestitution(0.125)
 
     -- Setting up sprite:
     standSprite = love.graphics.newImage("/assets/cake_standing_1.png")
@@ -65,6 +67,7 @@ end
 
 function cake:rotate(direction)
     self.rot.ing = true
+    self.hasRotated = true
     if direction == "right" then
         self.rot.dir = 1
     else
@@ -91,9 +94,9 @@ function cake:keypressed(key)
         self.isGrounded = false
         self.state = "jump"
     elseif key == "a" then
-        if not self.rot.ing then self:rotate("left") end
+        if not self.rot.ing and not self.hasRotated and not self.isGrounded then self:rotate("left") end
     elseif key == "d" then
-        if not self.rot.ing then self:rotate("right") end
+        if not self.rot.ing and not self.hasRotated and not self.isGrounded then self:rotate("right") end
     elseif key == "l" then
         print("grav.dir.x: ", self.grav.dir.x)
         print("grav.dir.y: ", self.grav.dir.y)
