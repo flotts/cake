@@ -1,10 +1,12 @@
 require "scripts/world"
 require "scripts/cake"
+require "scripts/spikes"
 
 function love.load()
     love.graphics.setDefaultFilter("nearest")
     world:load()
     cake:load()
+    spikes:load()
 end
 
 function love.keypressed(key)
@@ -14,6 +16,7 @@ end
 function love.update(dt)
     world:update(dt)
     cake:update(dt)
+    spikes:update(dt)
 end
 
 worldTranslation = {
@@ -29,4 +32,5 @@ function love.draw()
 
     world:draw()
     cake:draw()
+    spikes:draw()
 end

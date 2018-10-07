@@ -121,24 +121,14 @@ function cake:update(dt)
             if self.grav.dir.x == 0 then
                 if self.grav.dir.y > 0 then
                     self.body:setLinearVelocity(-self.spd, self.yVel)
-                    print("Gravity is right side up!")
-                    print(self.grav.dir.y)
                 else
                     self.body:setLinearVelocity(self.spd, self.yVel)
-                    print("Gravity is upside down!")
-                    print(self.grav.dir.y)
                 end
             else -- If gravity is sideways
                 if self.grav.dir.x > 0 then
                     self.body:setLinearVelocity(self.xVel, self.spd)
-                    print("Gravity is rotated ... left?")
-                    print(self.grav.dir.y)
-                    print(self.grav.dir.x)
                 else
                     self.body:setLinearVelocity(self.xVel, -self.spd)
-                    print("Gravity is rotated ... right?")
-                    print(self.grav.dir.y)
-                    print(self.grav.dir.x)
                 end
             end
             mirror = -1
