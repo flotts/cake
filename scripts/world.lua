@@ -18,11 +18,26 @@ function world:load()
 
     -- Starting block
     world:newArenaStructure(0,3, 4, 2)
-    world:newArenaStructure(10,-5, 10, 2)
+    world:newArenaStructure(10,-5, 2, 10)
 
     world:newArenaStructure(7, 10, 3, 2)
 
+    spikes:newSpikes(-2, -3, 2)
+    world:newBreakableStructure(-2, -2)
+
     world:newBreakableStructure(4, 4)
+
+    world:newBreakableStructure(-5, -10)
+    world:newBreakableStructure(5, -9)
+
+    world:newBreakableStructure(-3, 9)
+
+    world:newArenaStructure(-9, 10, 3, 4)
+
+    world:newArenaStructure(-9, -10, 1, 4)
+
+    world:newArenaStructure(-11, -3, 1, 6)
+
 
     -- Loading images: 
     background = love.graphics.newImage("/assets/wallpaper.png")
@@ -75,9 +90,9 @@ end
 
 function world:draw()
     -- Tiling background wallpaper:
-    for i = 0, love.graphics.getWidth() / background:getWidth() do
-        for j = 0, love.graphics.getHeight() / background:getHeight() do
-            love.graphics.draw(background, (i * background:getWidth()) - worldTranslation.x, (j * background:getHeight()) - worldTranslation.y)
+    for i = 0, (love.graphics.getWidth() / background:getWidth() * 2) do
+        for j = 0, (love.graphics.getHeight() / background:getHeight() * 2) do
+            love.graphics.draw(background, (i * background:getWidth()) - worldTranslation.x - 20, (j * background:getHeight()) - worldTranslation.y)
         end
     end
 
