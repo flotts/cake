@@ -3,10 +3,10 @@ cake = {}
 -- Rotate variables:
 -- rotation variable table
 cake.rot = {
-    exactAngle = 0,         -- Current rotation, handles intermediate values
-    snapAngle = 0,          -- Set to 90deg angles
-    isRotating = false,     -- Whether or not the character is undergoing a rotation
-    dir = 0                 -- 
+    rot = 0,         -- Current rotation, handles intermediate values
+    base = 0,          -- Set to 90deg angles
+    ing = false,     -- Whether or not the character is undergoing a rotation
+    dir = 0
 }
 
 -- X and Y coords
@@ -51,6 +51,17 @@ function cake:load()
     runFrames[4] = love.graphics.newQuad(48,0,16,16,walkSpriteSheet:getDimensions())
 end
 
+function cake:rotate(direction)
+    self.rot.ing = true
+    if direction == "right" then
+        self.rot.dir = 1
+    else
+        self.rot.dir = -1
+    end
+    self.rot.start = love.timer.getTime()
+end
+
+
 function cake:keyPressed(key)
     if key == "space" and self.yVel <= .01 then
         self.body:applyLinearImpulse(0, -350)
@@ -82,13 +93,14 @@ function cake:update(dt)
     end
 
     -- Handling rotation:
-    if self.rot.isRotating and love.timer.getTime() - self.rot.start < 0.5 then
-        self.rot.exactAngle = self.rot.snapAngle + (((love.timer.getTime() - self.rot.start) * 2) * (math.pi / 2) * self.rot.dir)
+    if self.rot.ing and love.timer.getTime() - self.rot.start < 0.5 then
+        self.rot.rot = self.rot.base + (((love.timer.getTime() - self.rot.start) * 2) * (math.pi / 2) * self.rot.dir)
     else
-        self.rot.isRotating = false
-        self.rot.exactAngle = self.rot.snapAngle + (math.pi / 2) * self.rot.dir
+        self.rot.rot = self.rot.base + (math.pi / 2) * self.rot.dir
         self.rot.dir = 0
-        self.rot.snapAngle = self.rot.exactAngle
+        self.rot.base = self.rot.rot
+
+        self.rot.ing = false
     end
 
     -- Handling walk frames:
@@ -112,14 +124,4 @@ function cake:draw()
     elseif (self.state == "run") then
         love.graphics.draw(walkSpriteSheet,activeRunFrame, self.body:getX() + spriteXTranslate, self.body:getY() - 8, self.rot.exactAngle, mirror, 1)
     end
-end
-
-function cake:rotate(direction)
-    self.rot.isRotating = true
-    if direction == "right" then
-        self.rot.dir = 1
-    else
-        self.rot.dir = -1
-    end
-    self.rot.start = love.timer.getTime()
 end
