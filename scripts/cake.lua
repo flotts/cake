@@ -32,6 +32,8 @@ cake.weight = 1000
 cake.state = "stand"            -- stand, run, jump
 cake.isGrounded = false         -- Used to help indicate whether Cake can jump
 
+cake.dead = false
+
 -- Variables used to keep track of which way Cake is facing
 local mirror = 1                -- -1 for normal, 1 for mirrored
 local spriteXTranslate = 0      -- Set to 8 to mirror image (shifting it 16)
@@ -201,6 +203,14 @@ function cake:update(dt)
         elapsedTime = 0
     end
 
+
+    if self.dead then
+        self.body:setPosition( 0, 0 )
+        self.x = 0
+        self.y = 0
+        self.dead = false
+    end
+    
 end
 
 function cake:draw()
@@ -212,4 +222,8 @@ function cake:draw()
     elseif (self.state == "jump") then
         love.graphics.draw(jumpSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
     end
+end
+
+function cake:death()
+    self.dead = true
 end
