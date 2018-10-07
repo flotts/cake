@@ -27,7 +27,7 @@ function love.keypressed(key)
 end
 
 function love.wheelmoved(x, y)
-    if screen.scale > 1 and y < 0 then
+    if screen.scale > 2 and y < 0 then
         screen.scale = screen.scale + y
     elseif screen.scale < 10 and y > 0 then
         screen.scale = screen.scale + y

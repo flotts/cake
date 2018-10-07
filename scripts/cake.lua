@@ -215,7 +215,8 @@ function cake:update(dt)
     end
 
     if self.dead then
-        self.body:setPosition( 0, 0 )
+        self.body:setPosition(0, 0)
+        self.rot.snap = 0
         self.dead = false
     end
     
