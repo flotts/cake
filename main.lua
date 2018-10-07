@@ -1,3 +1,5 @@
+require "scripts/globals"
+
 require "scripts/world"
 require "scripts/cake"
 require "scripts/spikes"

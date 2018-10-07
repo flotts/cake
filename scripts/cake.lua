@@ -5,7 +5,8 @@ cake.rot = {
     rot = 0,         -- Current rotation, handles intermediate values
     snap = 0,          -- Set to 90deg angles
     ing = false,     -- Whether or not the character is undergoing a rotation
-    dir = 0
+    dir = 0,
+    dur = 0.25
 }
 
 -- gravity variable table
@@ -74,6 +75,10 @@ function cake:rotate(direction)
         self.rot.dir = -1
     end
     self.rot.start = love.timer.getTime()
+end
+
+function cake:respawn()
+    self.dead = true
 end
 
 function cake:keypressed(key)
@@ -177,8 +182,8 @@ function cake:update(dt)
     end
 
     -- Handling rotation:
-    if self.rot.ing and love.timer.getTime() - self.rot.start < 0.125 then
-        self.rot.rot = self.rot.snap + (((love.timer.getTime() - self.rot.start) * 8) * (math.pi / 2) * self.rot.dir --[[* ease()]])
+    if self.rot.ing and love.timer.getTime() - self.rot.start < self.rot.dur then
+        self.rot.rot = self.rot.snap + (((love.timer.getTime() - self.rot.start) * (1 / self.rot.dur)) * (math.pi / 2) * self.rot.dir) * (inOutCubic(love.timer.getTime() - self.rot.start, 0, 1, self.rot.dur) + dt)
     else
         self.rot.rot = self.rot.snap + (math.pi / 2) * self.rot.dir
         self.rot.dir = 0
@@ -206,11 +211,8 @@ function cake:update(dt)
         elapsedTime = 0
     end
 
-
     if self.dead then
         self.body:setPosition( 0, 0 )
-        self.x = 0
-        self.y = 0
         self.dead = false
     end
     
@@ -225,8 +227,4 @@ function cake:draw()
     elseif (self.state == "jump") then
         love.graphics.draw(jumpSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
     end
-end
-
-function cake:death()
-    self.dead = true
 end

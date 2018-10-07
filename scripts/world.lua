@@ -151,7 +151,7 @@ function beginContact(a, b, coll)
     end
     
     if aType == "cake" and bType == "spike" then 
-        cake:death()
+        cake:respawn()
         
     end
 end
