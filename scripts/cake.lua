@@ -25,7 +25,7 @@ cake.xVel = 0
 cake.yVel = 0
 
 -- Walk speed
-cake.spd = 100
+cake.spd = 150
 -- Gravity
 cake.weight = 1000
 
@@ -49,6 +49,7 @@ function cake:load()
     self.fixture = love.physics.newFixture(self.body, self.shape, 5)
     self.fixture:setUserData("cake")
     self.fixture:setFriction(0)
+    self.fixture:setRestitution(0.125)
 
     -- Setting up sprite:
     standSprite = love.graphics.newImage("/assets/cake_standing_1.png")
