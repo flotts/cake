@@ -71,7 +71,7 @@ function cake:rotate(direction)
 end
 
 
-function cake:keyPressed(key)
+function cake:keypressed(key)
     if key == "space" and self.yVel <= .01 and cake.isGrounded then
         self.body:applyLinearImpulse(0, -350)
         self.isGrounded = false
