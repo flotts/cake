@@ -1,3 +1,8 @@
+require "scripts/world/iron"
+require "scripts/world/dirt"
+require "scripts/world/spikes"
+require "scripts/world/bread"
+
 world = {}
 
 -- table for love.physics objects
@@ -8,8 +13,11 @@ world.arena = {
 
 function world:load()
     self.world = love.physics.newWorld()
-    -- Defines contact functions, which are at the bottom of this page
-    self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
+
+    iron:load()
+    dirt:load()
+    spikes:load()
+    bread:load()
 
     world:newArenaStructure(0, 15, 31, 1)
     world:newArenaStructure(-15, 0, 1, 31)
@@ -22,7 +30,6 @@ function world:load()
 
     world:newArenaStructure(7, 10, 3, 2)
 
-    spikes:newSpikes(-2, -3, 2)
     world:newBreakableStructure(-2, -2)
 
     world:newBreakableStructure(4, 4)
@@ -43,6 +50,9 @@ function world:load()
     background = love.graphics.newImage("/assets/wallpaper.png")
     ironBlockSprite = love.graphics.newImage("/assets/iron_block.png")
     dirtBlockSprite = love.graphics.newImage("/assets/dirt_block.png")
+
+    -- Defines contact functions, which are at the bottom of this file
+    self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 end
 
 -- To use this function, blocks' height and width should be divisible by 16!!
@@ -84,6 +94,11 @@ end
 
 function world:update(dt)
     self.world:update(dt)
+
+    iron:update(dt)
+    dirt:update(dt)
+    spikes:update(dt)
+    bread:update(dt)
 
     -- todo: add breakability to breakable blocks
 end
@@ -128,6 +143,11 @@ function world:draw()
         local yStart = self.arena.dirtBlocks[i].y - (self.arena.dirtBlocks[i].height / 2)
         love.graphics.draw(dirtBlockSprite, xStart, yStart, 0, 1, 1)
     end
+
+    iron:draw()
+    dirt:draw()
+    spikes:draw()
+    bread:draw()
 end
 
 
@@ -136,23 +156,15 @@ function beginContact(a, b, coll)
     x,y = coll:getNormal()
     local aType = a:getUserData()
     local bType = b:getUserData()
-    print("------")
-    print("collision!!:")
-    print(aType)
-    print(bType)
     -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
     if aType == "ground" and bType == "cake" then
         cake.isGrounded = true
         cake.hasRotated = false
-    elseif aType == "spike" and bType == "cake" then
-        print("Collided w spike!! ")
-        cake.x = 0
-        cake.y = 0
     end
     
     if aType == "cake" and bType == "spike" then 
         cake:respawn()
-        
+        print("cake hit a spike!")
     end
 end
  

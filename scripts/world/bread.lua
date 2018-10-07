@@ -1,4 +1,10 @@
+bread = {}
+
 function bread:load()
+
+end
+
+function bread:new()
 
 end
 

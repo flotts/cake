@@ -2,7 +2,6 @@ require "scripts/globals"
 
 require "scripts/world"
 require "scripts/cake"
-require "scripts/spikes"
 
 function love.load()
     screen = {
@@ -14,7 +13,6 @@ function love.load()
 
     world:load()
     cake:load()
-    spikes:load()
 end
 
 function love.keypressed(key)
@@ -33,7 +31,6 @@ function love.update(dt)
 
     world:update(dt)
     cake:update(dt)
-    spikes:update(dt)
 end
 
 function love.draw()
@@ -44,5 +41,4 @@ function love.draw()
 
     world:draw()
     cake:draw()
-    spikes:draw()
 end
