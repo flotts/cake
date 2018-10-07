@@ -1,95 +1,21 @@
+-- blocks & entities
 require "scripts/world/iron"
 require "scripts/world/dirt"
-require "scripts/world/spikes"
+require "scripts/world/spike"
 require "scripts/world/bread"
 
 world = {}
 
--- table for love.physics objects
-world.arena = {
-    ironBlocks = {},
-    dirtBlocks = {}
-}
-
 function world:load()
     self.world = love.physics.newWorld()
+    self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
+
+    world.bg = love.graphics.newImage("/assets/wallpaper.png")
 
     iron:load()
     dirt:load()
-    spikes:load()
+    spike:load()
     bread:load()
-
-    world:newArenaStructure(0, 15, 31, 1)
-    world:newArenaStructure(-15, 0, 1, 31)
-    world:newArenaStructure(15, 0, 1, 31)
-    world:newArenaStructure(0, -15, 31, 1)
-
-    -- Starting block
-    world:newArenaStructure(0,3, 4, 2)
-    world:newArenaStructure(10,-5, 2, 10)
-
-    world:newArenaStructure(7, 10, 3, 2)
-
-    world:newBreakableStructure(-2, -2)
-
-    world:newBreakableStructure(4, 4)
-
-    world:newBreakableStructure(-5, -10)
-    world:newBreakableStructure(5, -9)
-
-    world:newBreakableStructure(-3, 9)
-
-    world:newArenaStructure(-9, 10, 3, 4)
-
-    world:newArenaStructure(-9, -10, 1, 4)
-
-    world:newArenaStructure(-11, -3, 1, 6)
-
-
-    -- Loading images: 
-    background = love.graphics.newImage("/assets/wallpaper.png")
-    ironBlockSprite = love.graphics.newImage("/assets/iron_block.png")
-    dirtBlockSprite = love.graphics.newImage("/assets/dirt_block.png")
-
-    -- Defines contact functions, which are at the bottom of this file
-    self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-end
-
--- To use this function, blocks' height and width should be divisible by 16!!
-function world:newArenaStructure(x, y, w, h)
-    x = x * 16
-    y = y * 16
-    w = w * 16
-    h = h * 16
-    local myStruct = {}
-    myStruct.body = love.physics.newBody(self.world, x, y)
-    myStruct.shape = love.physics.newRectangleShape(w, h)
-    myStruct.fixture = love.physics.newFixture(myStruct.body, myStruct.shape)
-    myStruct.y = y
-    myStruct.x = x
-    myStruct.width = w
-    myStruct.height = h
-    myStruct.fixture:setUserData("ground")
-
-    table.insert(self.arena.ironBlocks, myStruct)
-end
-
-function world:newBreakableStructure(x, y)
-    x = x * 16
-    y = y * 16
-    local w = 16
-    local h = 16
-    local myStruct = {}
-    myStruct.body = love.physics.newBody(self.world, x, y)
-    myStruct.shape = love.physics.newRectangleShape(w, h)
-    myStruct.fixture = love.physics.newFixture(myStruct.body, myStruct.shape)
-    myStruct.y = y
-    myStruct.x = x
-    myStruct.width = w
-    myStruct.height = h
-    myStruct.fixture:setUserData("ground")
-
-    table.insert(self.arena.dirtBlocks, myStruct)
 end
 
 function world:update(dt)
@@ -97,67 +23,31 @@ function world:update(dt)
 
     iron:update(dt)
     dirt:update(dt)
-    spikes:update(dt)
+    spike:update(dt)
     bread:update(dt)
-
-    -- todo: add breakability to breakable blocks
 end
 
 function world:draw()
-    -- Tiling background wallpaper:
-    for i = 0, (love.graphics.getWidth() / background:getWidth() * 2) do
-        for j = 0, (love.graphics.getHeight() / background:getHeight() * 2) do
-            love.graphics.draw(background, (i * background:getWidth()) - screen.width - 20, (j * background:getHeight()) - screen.height)
+    -- tiling background wallpaper:
+    for i = 0, (love.graphics.getWidth() / self.bg:getWidth() * 2) do
+        for j = 0, (love.graphics.getHeight() / self.bg:getHeight() * 2) do
+            love.graphics.draw(self.bg, (i * self.bg:getWidth()) - screen.width - 20, (j * self.bg:getHeight()) - screen.height)
         end
-    end
-
-    -- Tiling solid blocks: 
-    for i in ipairs(self.arena.ironBlocks) do
-        -- Adding white background, for debugging:
-    -- love.graphics.polygon("fill", self.arena[i].body:getWorldPoints(self.arena[i].shape:getPoints()))
-        -- xStart calculates the top right corner of the box
-        local xStart = self.arena.ironBlocks[i].x - (self.arena.ironBlocks[i].width / 2)
-        local yStart = self.arena.ironBlocks[i].y - (self.arena.ironBlocks[i].height / 2)
-        -- These will be used to iterate through the width and height in increments of 16
-        local widthRemaining = self.arena.ironBlocks[i].width
-
-        -- We'll subtract 16 from widthRemaining until it's 0
-        while widthRemaining > 0 do
-            local xVal = xStart + self.arena.ironBlocks[i].width - widthRemaining
-            local heightRemaining = self.arena.ironBlocks[i].height
-
-            while heightRemaining > 0 do
-                local yVal = yStart + self.arena.ironBlocks[i].height - heightRemaining
-                love.graphics.draw(ironBlockSprite, xVal, yVal, 0, 1, 1)
-                heightRemaining = heightRemaining - 16
-            end
-            widthRemaining = widthRemaining - 16
-        end
-
-        love.graphics.draw(ironBlockSprite, xStart, yStart, 0, 1, 1)
-    end
-    
-    for i in ipairs(self.arena.dirtBlocks) do
-        love.graphics.polygon("fill", self.arena.dirtBlocks[i].body:getWorldPoints(self.arena.dirtBlocks[i].shape:getPoints()))
-        local xStart = self.arena.dirtBlocks[i].x - (self.arena.dirtBlocks[i].width / 2)
-        local yStart = self.arena.dirtBlocks[i].y - (self.arena.dirtBlocks[i].height / 2)
-        love.graphics.draw(dirtBlockSprite, xStart, yStart, 0, 1, 1)
     end
 
     iron:draw()
     dirt:draw()
-    spikes:draw()
+    spike:draw()
     bread:draw()
 end
 
-
--- CONTACT FUNCTIONS:
+-- contact functions
 function beginContact(a, b, coll)
-    x,y = coll:getNormal()
+    x, y = coll:getNormal()
     local aType = a:getUserData()
     local bType = b:getUserData()
     -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
-    if aType == "ground" and bType == "cake" then
+    if aType == "iron" and bType == "cake" then
         cake.isGrounded = true
         cake.hasRotated = false
     end
