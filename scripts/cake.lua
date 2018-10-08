@@ -36,6 +36,7 @@ cake.yVel = 0
 cake.spd = 150                  -- Walk speed
 
 cake.state = "stand"            -- stand, run, jump
+cake.crouching = false
 
 cake.isGrounded = false         -- Used to help indicate whether Cake can jump
 cake.hasRotated = false
@@ -58,6 +59,8 @@ function cake:load()
     self.spr.stand = love.graphics.newImage("/assets/cake/standing_1.png")
     self.spr.jump = love.graphics.newImage("/assets/cake/jumping_1.png")
 
+    self.spr.crouch = love.graphics.newImage("/assets/cake/crouching_1.png")
+
     self.spr.walkCycle = love.graphics.newImage("/assets/cake/running_1.png")
     self.spr.walkFrames[1] = love.graphics.newQuad(0,0,16,16,self.spr.walkCycle:getDimensions())
     self.spr.walkFrames[2] = love.graphics.newQuad(16,0,16,16,self.spr.walkCycle:getDimensions())
@@ -77,6 +80,7 @@ function cake:rotate(direction)
 end
 
 function cake:respawn()
+    -- todo: add death animation
     self.dead = true
 end
 
@@ -182,6 +186,12 @@ function cake:update(dt)
 
         if (self.isGrounded) then 
             self.state = "stand"
+
+            if love.keyboard.isDown("down") then
+                self.crouching = true
+            else
+                self.crouching = false
+            end
         end
     end
 
@@ -228,7 +238,11 @@ end
 function cake:draw()
     -- Iterating through active run frames:
     if (self.state == "stand") then
-        love.graphics.draw(self.spr.stand, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
+        if self.crouching then
+            love.graphics.draw(self.spr.crouch, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
+        else
+            love.graphics.draw(self.spr.stand, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
+        end
     elseif (self.state == "run") then
         love.graphics.draw(self.spr.walkCycle, self.spr.activeWalkFrame, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
     elseif (self.state == "jump") then

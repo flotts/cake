@@ -53,7 +53,6 @@ function beginContact(a, b, coll)
     end
     
     if (aType == "spike" and bType == "cake") or (aType == "cake" and bType == "spike") then
-        -- todo: add death animation
         cake:respawn()
     end
 end
