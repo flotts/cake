@@ -54,7 +54,7 @@ function cake:load()
     self.fixture:setFriction(0)
     self.fixture:setRestitution(0.2)
 
-    -- Setting up sprite:
+    -- Setting up sprites:
     self.spr.stand = love.graphics.newImage("/assets/cake/standing_1.png")
     self.spr.jump = love.graphics.newImage("/assets/cake/jumping_1.png")
 
