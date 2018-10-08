@@ -58,7 +58,6 @@ function cake:load()
     -- Setting up sprites:
     self.spr.stand = love.graphics.newImage("/assets/cake/standing_1.png")
     self.spr.jump = love.graphics.newImage("/assets/cake/jumping_1.png")
-
     self.spr.crouch = love.graphics.newImage("/assets/cake/crouching_1.png")
 
     self.spr.walkCycle = love.graphics.newImage("/assets/cake/running_1.png")
