@@ -29,8 +29,8 @@ end
 
 function world:draw()
     -- tiling background wallpaper:
-    for i = 0, (love.graphics.getWidth() / self.bg:getWidth() * 2) do
-        for j = 0, (love.graphics.getHeight() / self.bg:getHeight() * 2) do
+    for i = 0, (screen.width / self.bg:getWidth() * 2) do
+        for j = 0, (screen.height / self.bg:getHeight() * 2) do
             love.graphics.draw(self.bg, (i * self.bg:getWidth()) - screen.width - 20, (j * self.bg:getHeight()) - screen.height)
         end
     end

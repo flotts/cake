@@ -4,12 +4,9 @@ require "scripts/world"
 require "scripts/cake"
 
 function love.load()
-    screen = {
-        width = love.graphics.getWidth(),
-        height = love.graphics.getHeight(),
-        scale = 3
-    }
-    
+    globals.load()
+
+    -- set default texture drawing filter to nearest neighbor
     love.graphics.setDefaultFilter("nearest")
 
     world:load()
@@ -35,8 +32,7 @@ function love.wheelmoved(x, y)
 end
 
 function love.update(dt)
-    screen.width = love.graphics.getWidth()
-    screen.height = love.graphics.getHeight()
+    globals.update()
 
     world:update(dt)
     cake:update(dt)
