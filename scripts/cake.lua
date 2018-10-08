@@ -2,9 +2,9 @@ cake = {}
 
 -- rotation variable table
 cake.rot = {
-    rot = 0,         -- Current rotation, handles intermediate values
-    snap = 0,        -- Set to 90deg angles
-    ing = false,     -- Whether or not the character is mid-rotation
+    rot = 0,                    -- Current rotation, handles intermediate values
+    snap = 0,                   -- Set to 90deg angles
+    ing = false,                -- Whether or not the character is mid-rotation
     dir = 0,
     dur = 0.25
 }
@@ -18,28 +18,29 @@ cake.grav = {
     amt = 500
 }
 
+cake.spr = {
+    mirror = 1,                 -- 1 for normal, -1 for reversed
+    walkFrames = {},
+    activeWalkFrame,
+    currentWalkFrame = 1
+}
+
 -- X and Y coords
 cake.x = 0
 cake.y = 0
+
 -- X and Y vel
 cake.xVel = 0
 cake.yVel = 0
 
--- Walk speed
-cake.spd = 150
+cake.spd = 150                  -- Walk speed
 
 cake.state = "stand"            -- stand, run, jump
+
 cake.isGrounded = false         -- Used to help indicate whether Cake can jump
 cake.hasRotated = false
 
 cake.dead = false
-
--- Variable used to keep track of which way Cake is facing
-local mirror = 1                -- -1 for normal, 1 for mirrored
-
-local runFrames = {}
-local activeRunFrame            -- Stores the actual data of the frame location
-local currentRunFrame = 1       -- stores which frame is currently displayed (1-4)
 
 local elapsedTime = 0
 
@@ -54,14 +55,14 @@ function cake:load()
     self.fixture:setRestitution(0.2)
 
     -- Setting up sprite:
-    standSprite = love.graphics.newImage("/assets/cake/standing_1.png")
-    jumpSprite = love.graphics.newImage("/assets/cake/jumping_1.png")
+    self.spr.stand = love.graphics.newImage("/assets/cake/standing_1.png")
+    self.spr.jump = love.graphics.newImage("/assets/cake/jumping_1.png")
 
-    walkSpriteSheet = love.graphics.newImage("/assets/cake/running_1.png")
-    runFrames[1] = love.graphics.newQuad(0,0,16,16,walkSpriteSheet:getDimensions())
-    runFrames[2] = love.graphics.newQuad(16,0,16,16,walkSpriteSheet:getDimensions())
-    runFrames[3] = love.graphics.newQuad(32,0,16,16,walkSpriteSheet:getDimensions())
-    runFrames[4] = love.graphics.newQuad(48,0,16,16,walkSpriteSheet:getDimensions())
+    self.spr.walkCycle = love.graphics.newImage("/assets/cake/running_1.png")
+    self.spr.walkFrames[1] = love.graphics.newQuad(0,0,16,16,self.spr.walkCycle:getDimensions())
+    self.spr.walkFrames[2] = love.graphics.newQuad(16,0,16,16,self.spr.walkCycle:getDimensions())
+    self.spr.walkFrames[3] = love.graphics.newQuad(32,0,16,16,self.spr.walkCycle:getDimensions())
+    self.spr.walkFrames[4] = love.graphics.newQuad(48,0,16,16,self.spr.walkCycle:getDimensions())
 end
 
 function cake:rotate(direction)
@@ -80,7 +81,7 @@ function cake:respawn()
 end
 
 function cake:keypressed(key)
-    if key == "space" and cake.isGrounded then
+    if key == "space" and self.isGrounded then
         if self.grav.dir.x == 0 then
             if self.grav.dir.y > 0 then
                 self.body:applyLinearImpulse(0, -350)
@@ -101,7 +102,7 @@ function cake:keypressed(key)
     elseif key == "d" then
         if not self.rot.ing and not self.hasRotated then self:rotate("right") end
     elseif key == "r" then
-        cake:respawn()
+        self:respawn()
     end
     
     -- log (for dev)
@@ -137,7 +138,7 @@ function cake:update(dt)
             end
         end
 
-        mirror = -1
+        self.spr.mirror = -1
 
         if (self.isGrounded) then
             self.state = "run"
@@ -163,7 +164,7 @@ function cake:update(dt)
             end
         end
 
-        mirror = 1
+        self.spr.mirror = 1
 
         if self.isGrounded then
             self.state = "run"
@@ -205,12 +206,12 @@ function cake:update(dt)
     elapsedTime = elapsedTime + dt
 
     if(elapsedTime > .1) then
-        if(currentRunFrame < 4) then
-            currentRunFrame = currentRunFrame + 1
+        if(self.spr.currentWalkFrame < 4) then
+            self.spr.currentWalkFrame = self.spr.currentWalkFrame + 1
         else
-            currentRunFrame = 1
+            self.spr.currentWalkFrame = 1
         end
-        activeRunFrame = runFrames[currentRunFrame]
+        self.spr.activeWalkFrame = self.spr.walkFrames[self.spr.currentWalkFrame]
         elapsedTime = 0
     end
 
@@ -227,10 +228,10 @@ end
 function cake:draw()
     -- Iterating through active run frames:
     if (self.state == "stand") then
-        love.graphics.draw(standSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
+        love.graphics.draw(self.spr.stand, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
     elseif (self.state == "run") then
-        love.graphics.draw(walkSpriteSheet,activeRunFrame, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
+        love.graphics.draw(self.spr.walkCycle, self.spr.activeWalkFrame, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
     elseif (self.state == "jump") then
-        love.graphics.draw(jumpSprite, self.body:getX(), self.body:getY(), -self.rot.rot, mirror, 1, 8, 8)
+        love.graphics.draw(self.spr.jump, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
     end
 end
