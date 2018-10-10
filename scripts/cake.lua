@@ -20,7 +20,7 @@ cake.grav = {
 
 cake.spr = {
     mirror = 1,                 -- 1 for normal, -1 for reversed
-    walkFrames = {},
+    walkFrames = {},            -- stores image sources 
     activeWalkFrame,
     currentWalkFrame = 1
 }
@@ -58,6 +58,7 @@ function cake:load()
     -- Setting up sprites:
     self.spr.stand = love.graphics.newImage("/assets/cake/standing_1.png")
     self.spr.jump = love.graphics.newImage("/assets/cake/jumping_1.png")
+    self.spr.jump_down = love.graphics.newImage("/assets/cake/jumping_down_1.png")
     self.spr.crouch = love.graphics.newImage("/assets/cake/crouching_1.png")
 
     self.spr.walkCycle = love.graphics.newImage("/assets/cake/running_1.png")
@@ -245,6 +246,12 @@ function cake:draw()
     elseif (self.state == "run") then
         love.graphics.draw(self.spr.walkCycle, self.spr.activeWalkFrame, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
     elseif (self.state == "jump") then
-        love.graphics.draw(self.spr.jump, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
+        if (cake.grav.dir.x == 0 and (cake.grav.dir.y * cake.yVel) < 0)
+           or (cake.grav.dir.y == 0 and (cake.grav.dir.x * cake.xVel) < 0) then 
+            -- To remove the downward jump sprite anim, just remove the surrounding if statement
+            love.graphics.draw(self.spr.jump, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
+        else
+            love.graphics.draw(self.spr.jump_down, self.body:getX(), self.body:getY(), -self.rot.rot, self.spr.mirror, 1, 8, 8)
+        end
     end
 end
