@@ -43,13 +43,19 @@ end
 
 -- contact behavior
 function beginContact(a, b, coll)
-    x, y = coll:getNormal()
+
+    -- X and Y give a UNIT VECTOR from the first shape to the second
+    -- So if a is cake and b is a block below Cake at normal orientation,
+    -- X and Y will be (0, -1)
+    x, y = coll:getNormal() 
     local aType = a:getUserData()
     local bType = b:getUserData()
     -- text = text.."\n"..a:getUserData().." colliding with "..b:getUserData().." with a vector normal of: "..x..", "..    
     if ((aType == "iron" or aType == "dirt") and bType == "cake") or (aType == "cake" and (bType == "iron" or bType == "dirt")) then
-        cake.isGrounded = true
-        cake.hasRotated = false
+        if (x == -cake.grav.dir.x and y == -cake.grav.dir.y) then
+            cake.isGrounded = true
+            cake.hasRotated = false
+        end
     end
     
     if (aType == "spike" and bType == "cake") or (aType == "cake" and bType == "spike") then
