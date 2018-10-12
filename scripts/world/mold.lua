@@ -7,9 +7,12 @@ mold.spr = {                 -- 1 for normal, -1 for reversed
     currentDroolFrame = 1        -- stores integer indicating which frame we're on
 }
 
+mold.handSpeed = .2
+
 local elapsedTime = 0           -- Used for the animation
 
 function mold:load()
+    -- Loading in sprites:
     mold.spr.droolSheet = love.graphics.newImage("/assets/mold_body_1.png")
     self.spr.droolFrames[1] = love.graphics.newQuad(0,0,16,16,self.spr.droolSheet:getDimensions())
     self.spr.droolFrames[2] = love.graphics.newQuad(16,0,16,16,self.spr.droolSheet:getDimensions())
@@ -18,7 +21,10 @@ function mold:load()
 
     self.spr.hand = love.graphics.newImage("/assets/mold_hand.png")
 
-    mold:new(5,1,0)
+    -- Initializing activeDroolFrame
+    self.spr.activeDroolFrame = self.spr.droolFrames[self.spr.currentDroolFrame]
+
+    mold:new(4,1,0)
 end
 
 function mold:new(x, y, rot)
@@ -37,9 +43,10 @@ function mold:new(x, y, rot)
     structure.height = h
     structure.rot = -rot * (math.pi / 2)
 
-    -- Mold's hand
+    -- loading in the current Mold's hand
     structure.hand = {}
-    structure.hand.x = x - 16
+    structure.hand.x = x - 16       -- Note the hand will appear in front of the new mold
+        -- TODO: Make all this work with different rotations
     structure.hand.y = y
     structure.hand.body = love.physics.newBody(world.world, structure.hand.x, structure.hand.y)
     structure.hand.shape = love.physics.newRectangleShape(w, h)
@@ -55,7 +62,7 @@ end
 function mold:update(dt)
     -- Handling drool frames:
     elapsedTime = elapsedTime + dt
-    if(elapsedTime > .1) then
+    if(elapsedTime > .2) then
         if(self.spr.currentDroolFrame < 4) then
             self.spr.currentDroolFrame = self.spr.currentDroolFrame + 1
         else
@@ -63,6 +70,25 @@ function mold:update(dt)
         end
         self.spr.activeDroolFrame = self.spr.droolFrames[self.spr.currentDroolFrame]
         elapsedTime = 0
+    end
+
+    -- Moving hand towards Cake
+    for i in ipairs(self.molds) do
+        -- Checking if we should shift the hand negative or positive .1 in the x direction
+            -- For example, We only want to move increase the hand's X if:
+            --          1. The player has a higher X than the hand
+            --          2. The hand won't be going further than 32 units away from its body
+        -- TODO: This could probably use cleaned up
+        if (cake.x > self.molds[i].hand.x) and (self.molds[i].hand.x < mold.molds[i].x + 32) then
+            self.molds[i].hand.x = self.molds[i].hand.x + self.handSpeed
+        elseif (cake.x < self.molds[i].hand.x) and (self.molds[i].hand.x > mold.molds[i].x - 32) then
+            self.molds[i].hand.x = self.molds[i].hand.x - self.handSpeed
+        end
+        if (cake.y > self.molds[i].hand.y) and (self.molds[i].hand.y < mold.molds[i].y + 32) then
+            self.molds[i].hand.y = self.molds[i].hand.y + self.handSpeed
+        elseif (cake.y < self.molds[i].hand.y) and (self.molds[i].hand.y > mold.molds[i].y - 32) then
+            self.molds[i].hand.y = self.molds[i].hand.y - self.handSpeed
+        end
     end
 end
 

@@ -12,7 +12,7 @@ function dirt:load()
     dirt:new(-3, 9)
     dirt:new(12, 3)
 
-    dirt:new(5,2,0)
+    dirt:new(4,2,0)
 end
 
 function dirt:new(x, y)

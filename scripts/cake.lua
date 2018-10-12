@@ -119,6 +119,8 @@ end
 
 function cake:update(dt)
     self.xVel, self.yVel = self.body:getLinearVelocity()
+    self.x = self.body:getX()           -- Used for clarity & brevity in other files
+    self.y = self.body:getY()           -- Used for clarity & brevity in other files
 
     -- Handling right & left motion:
     if love.keyboard.isDown("left") then
