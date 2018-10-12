@@ -3,6 +3,7 @@ require "scripts/world/iron"
 require "scripts/world/dirt"
 require "scripts/world/spike"
 require "scripts/world/bread"
+require "scripts/world/mold"
 
 world = {}
 
@@ -16,6 +17,7 @@ function world:load()
     dirt:load()
     spike:load()
     bread:load()
+    mold:load()
 end
 
 function world:update(dt)
@@ -25,6 +27,7 @@ function world:update(dt)
     dirt:update(dt)
     spike:update(dt)
     bread:update(dt)
+    mold:update(dt)
 end
 
 function world:draw()
@@ -39,6 +42,7 @@ function world:draw()
     dirt:draw()
     spike:draw()
     bread:draw()
+    mold:draw()
 end
 
 -- contact behavior
