@@ -36,7 +36,7 @@ function mold:new(x, y, rot)
     structure.body = love.physics.newBody(world.world, x, y)
     structure.shape = love.physics.newRectangleShape(w, h)
     structure.fixture = love.physics.newFixture(structure.body, structure.shape)
-    structure.fixture:setUserData("spike")
+    structure.fixture:setUserData("mold_body")
     structure.y = y
     structure.x = x
     structure.width = w
@@ -53,6 +53,7 @@ function mold:new(x, y, rot)
     structure.hand.fixture = love.physics.newFixture(structure.hand.body, structure.hand.shape)
     structure.hand.fixture:setUserData("spike")
     structure.hand.rot = -rot * (math.pi / 2)
+    structure.hand.mirror = 1   -- set to -1 on mirror
 
 
 
@@ -81,8 +82,10 @@ function mold:update(dt)
         -- TODO: This could probably use cleaned up
         if (cake.x > self.molds[i].hand.x) and (self.molds[i].hand.x < mold.molds[i].x + 32) then
             self.molds[i].hand.x = self.molds[i].hand.x + self.handSpeed
+            self.molds[i].hand.mirror = -1
         elseif (cake.x < self.molds[i].hand.x) and (self.molds[i].hand.x > mold.molds[i].x - 32) then
             self.molds[i].hand.x = self.molds[i].hand.x - self.handSpeed
+            self.molds[i].hand.mirror = 1
         end
         if (cake.y > self.molds[i].hand.y) and (self.molds[i].hand.y < mold.molds[i].y + 32) then
             self.molds[i].hand.y = self.molds[i].hand.y + self.handSpeed
@@ -100,6 +103,6 @@ function mold:draw()
         local rot = mold.molds[i].rot
         local hand = mold.molds[i].hand
         love.graphics.draw(self.spr.droolSheet, self.spr.activeDroolFrame, xVal, yVal, rot, 1, 1, 8, 8)
-        love.graphics.draw(self.spr.hand, hand.x, hand.y, hand.rot, 1, 1, 8, 8)
+        love.graphics.draw(self.spr.hand, hand.x, hand.y, hand.rot, hand.mirror, 1, 8, 8)
     end
 end
