@@ -65,6 +65,12 @@ function beginContact(a, b, coll)
     if (aType == "spike" and bType == "cake") or (aType == "cake" and bType == "spike") then
         cake:respawn()
     end
+
+    if (aType == "mold_body" and bType == "cake") then
+        if (x == -cake.grav.dir.x and y == -cake.grav.dir.y) then 
+            print("SMOOOSH")
+        end
+    end
 end
  
 function endContact(a, b, coll)
